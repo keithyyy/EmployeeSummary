@@ -6,7 +6,7 @@ const path = require("path");
 const fs = require("fs");
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
-const outputPath = path.join(OUTPUT_DIR, "team.html");
+// const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
@@ -161,10 +161,50 @@ function getInfo() {
                     getInfo(team)
                 } else {
                     console.log("Team roster: ", team)
+                    askTeamName();
                 
                 }
             })
         } 
+    })
+}
+
+const teamNameQuestion = {
+    type: "input",
+    name: "teamName",
+    message: "Enter your team name:",
+    validate: teamName => {
+        if (teamName) {
+            return true;
+        } else {
+            console.log("Invalid! Please enter a team name.");
+            return false;
+        }
+    }
+}
+
+const askTeamName = () => {
+    inquirer.prompt(teamNameQuestion).then(ans => {
+        if (ans.teamName) {
+            createTeam(ans.teamName);
+        } else {
+            askTeamName();
+        }
+    })
+}
+
+const createTeam = (teamName) => {
+    const outputPath = path.join(OUTPUT_DIR, teamName + "team.html");
+
+    if (!fs.existsSync(OUTPUT_DIR)) {
+        fs.mkdirSync(OUTPUT_DIR)
+    }
+
+    fs.writeFileSync(outputPath, render(team), (err) => {
+        if (err) {
+            console.log(err);
+            
+        }
     })
 }
 
