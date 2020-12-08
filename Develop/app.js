@@ -18,6 +18,7 @@ const startApp = () => {
 };
 // Empty array of team member to start.
 let team = [];
+let nameofTeam = "";
 
 // questions to get team member info.
 function getInfo() {
@@ -187,11 +188,15 @@ const askTeamName = () => {
     inquirer.prompt(teamNameQuestion).then(ans => {
         if (ans.teamName) {
             createTeam(ans.teamName);
+            return nameofTeam = ans.teamName;
         } else {
             askTeamName();
         }
     })
 }
+
+
+
 
 const createTeam = (teamName) => {
     const outputPath = path.join(OUTPUT_DIR, teamName + "team.html");
